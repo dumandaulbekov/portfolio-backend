@@ -1,10 +1,11 @@
 <?php
 
-require 'connect.php';
+require '../connect.php';
 
 $postdata = file_get_contents("php://input");
 
 if (isset($postdata) && !empty($postdata)) {
+
     $request = json_decode($postdata);
 
     if (trim($request->title === '' || $request->content === '')) {

@@ -1,11 +1,11 @@
 <?php
 
-require 'connect.php';
+require '../connect.php';
 
-$posts = [];
 $sql = "SELECT id, title, content, createdDate, modifiedDate FROM posts";
 
 if ($result = mysqli_query($con, $sql)) {
+    $posts = [];
     $i = 0;
 
     while ($row = mysqli_fetch_assoc($result)) {
