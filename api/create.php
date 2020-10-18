@@ -12,19 +12,17 @@ if (isset($postdata) && !empty($postdata)) {
     }
 
     $title = mysqli_real_escape_string($con, trim($request->title));
-    $image = mysqli_real_escape_string($con, trim($request->image));
     $content = mysqli_real_escape_string($con, trim($request->content));
     $createdDate = mysqli_real_escape_string($con, $request->createdDate);
     $modifiedDate = mysqli_real_escape_string($con, $request->modifiedDate);
 
-    $sql = "INSERT INTO `posts`(`id`, `title`, `image`, `content`, `createdDate`, `modifiedDate`) VALUES (null, '{$title}', '{$image}', '{$content}', '{$createdDate}' ,'{$modifiedDate}')";
+    $sql = "INSERT INTO `posts`(`id`, `title`, `content`, `createdDate`, `modifiedDate`) VALUES (null, '{$title}', '{$content}', '{$createdDate}' ,'{$modifiedDate}')";
 
     if (mysqli_query($con, $sql)) {
         http_response_code(201);
 
         $post = [
             'title' => $title,
-            'image' => $image,
             'content' => $content,
             'createdDate' => $createdDate,
             'modifiedDate' => $modifiedDate,
