@@ -5,18 +5,18 @@ require '../connect.php';
 $request = file_get_contents("php://input");
 
 if (isset($request) && !empty($request)) {
-    $body = json_decode($request);
+    $todo = json_decode($request);
 
-    if (trim($body->name === '' || $body->boardType === '')) {
+    if (trim($todo->name === '' || $todo->boardType === '')) {
         return http_response_code(400);
     }
 
-    $name = mysqli_real_escape_string($con, trim($body->name));
-    $createdDate = mysqli_real_escape_string($con, $body->createdDate);
-    $modifiedDate = mysqli_real_escape_string($con, $body->modifiedDate);
-    $scheduleDate = mysqli_real_escape_string($con, $body->scheduleDate);
-    $isFinished = mysqli_real_escape_string($con, $body->isFinished);
-    $boardType = mysqli_real_escape_string($con, $body->boardType);
+    $name = mysqli_real_escape_string($con, trim($todo->name));
+    $createdDate = mysqli_real_escape_string($con, $todo->createdDate);
+    $modifiedDate = mysqli_real_escape_string($con, $todo->modifiedDate);
+    $scheduleDate = mysqli_real_escape_string($con, $todo->scheduleDate);
+    $isFinished = mysqli_real_escape_string($con, $todo->isFinished);
+    $boardType = mysqli_real_escape_string($con, $todo->boardType);
 
     $sql = "INSERT INTO `todoist`(`id`, `name`, `createdDate`, `modifiedDate`, `scheduleDate`, `isFinished`, `boardType`) VALUES (null, '{$name}', '{$createdDate}', '{$modifiedDate}', '{$scheduleDate}', '{$isFinished}', '{$boardType}')";
 
@@ -35,6 +35,6 @@ if (isset($request) && !empty($request)) {
 
         echo json_encode($todo);
     } else {
-        http_response_code(422);
+        return http_response_code(422);
     }
 }
