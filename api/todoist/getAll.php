@@ -2,7 +2,7 @@
 
 require '../connect.php';
 
-$sql = "SELECT * FROM `todoist`";
+$sql = "SELECT * FROM `todoist` WHERE `isFinished` = 0";
 
 if ($result = mysqli_query($con, $sql)) {
     $todoist = [];
@@ -22,5 +22,5 @@ if ($result = mysqli_query($con, $sql)) {
 
     echo json_encode($todoist);
 } else {
-    http_response_code(404);
+    return http_response_code(404);
 }
