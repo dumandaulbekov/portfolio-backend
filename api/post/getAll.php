@@ -2,7 +2,7 @@
 
 require '../connect.php';
 
-$sql = "SELECT id, title, content, createdDate, modifiedDate FROM posts";
+$sql = "SELECT * FROM posts";
 
 if ($result = mysqli_query($con, $sql)) {
     $posts = [];
