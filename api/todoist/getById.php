@@ -1,19 +1,28 @@
 <?php
 
-require "../connect.php";
+require '../connect.php';
 
-$id = ($_GET['id'] !== null && (int)$_GET['id'] > 0)
-    ? mysqli_real_escape_string($con, (int)$_GET['id'])
-    : false;
+$getById = new GetByIdTodo();
+$getById->getById();
 
-if ($id) {
-    $sql = "SELECT * FROM `todoist` WHERE id='{$id}'";
+class GetByIdTodo {
+    public function getById() {
+        $con = connect();
 
-    if ($result = mysqli_query($con, $sql)) {
-        return json_encode(mysqli_fetch_assoc($result));
-    } else {
-        return http_response_code(404);
+        $id = ($_GET['id'] !== null && (int)$_GET['id'] > 0)
+            ? mysqli_real_escape_string($con, (int)$_GET['id'])
+            : false;
+
+        if ($id) {
+            $sql = "SELECT * FROM `todoist` WHERE id='{$id}'";
+
+            if ($result = mysqli_query($con, $sql)) {
+                return json_encode(mysqli_fetch_assoc($result));
+            } else {
+                return http_response_code(404);
+            }
+        } else {
+            return http_response_code(400);
+        }
     }
-} else {
-    return http_response_code(400);
 }

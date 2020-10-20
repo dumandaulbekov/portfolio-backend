@@ -2,11 +2,11 @@
 
 require '../connect.php';
 
-$update = new UpdateTodoName();
-$update->updateTodo();
+$update = new UpdateTodoType();
+$update->updateType();
 
-class UpdateTodoName {
-    public function updateTodo() {
+class UpdateTodoType {
+    public function updateType() {
         $con = connect();
 
         $body = file_get_contents("php://input");
@@ -14,15 +14,15 @@ class UpdateTodoName {
         if (isset($body) && !empty($body)) {
             $todo = json_decode($body);
 
-            if ((int)$todo->id < 1 || trim($todo->name) == '') {
+            if ((int)$todo->id < 1 || trim($todo->boardType) == '') {
                 return http_response_code(400);
             }
 
             $id = mysqli_escape_string($con, (int)$todo->id);
-            $name = mysqli_escape_string($con, trim($todo->name));
+            $boardType = mysqli_escape_string($con, $todo->boardType);
             $modifiedDate = mysqli_escape_string($con, $todo->modifiedDate);
 
-            $sql = "UPDATE `todoist` SET `name`='$name', `modifiedDate`='$modifiedDate' WHERE `id`='{$id}' LIMIT 1";
+            $sql = "UPDATE `todoist` SET `boardType`='$boardType', `modifiedDate`='$modifiedDate' WHERE `id`='{$id}' LIMIT 1";
 
             $result = mysqli_query($con, $sql);
             if ($result) {

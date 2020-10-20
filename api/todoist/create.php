@@ -2,39 +2,48 @@
 
 require '../connect.php';
 
-$request = file_get_contents("php://input");
+$create = new CreateTodo();
+$create->create();
 
-if (isset($request) && !empty($request)) {
-    $todo = json_decode($request);
+class CreateTodo {
+    public function create() {
+        $con = connect();
 
-    if (trim($todo->name === '' || $todo->boardType === '')) {
-        return http_response_code(400);
-    }
+        $body = file_get_contents("php://input");
 
-    $name = mysqli_real_escape_string($con, trim($todo->name));
-    $createdDate = mysqli_real_escape_string($con, $todo->createdDate);
-    $modifiedDate = mysqli_real_escape_string($con, $todo->modifiedDate);
-    $scheduleDate = mysqli_real_escape_string($con, $todo->scheduleDate);
-    $isFinished = mysqli_real_escape_string($con, $todo->isFinished);
-    $boardType = mysqli_real_escape_string($con, $todo->boardType);
+        if (isset($body) && !empty($body)) {
+            $todo = json_decode($body);
 
-    $sql = "INSERT INTO `todoist`(`id`, `name`, `createdDate`, `modifiedDate`, `scheduleDate`, `isFinished`, `boardType`) VALUES (null, '{$name}', '{$createdDate}', '{$modifiedDate}', '{$scheduleDate}', '{$isFinished}', '{$boardType}')";
+            if (trim($todo->name === '' || $todo->boardType === '')) {
+                return http_response_code(400);
+            }
 
-    if (mysqli_query($con, $sql)) {
-        http_response_code(201);
+            $name = mysqli_real_escape_string($con, trim($todo->name));
+            $createdDate = mysqli_real_escape_string($con, $todo->createdDate);
+            $modifiedDate = mysqli_real_escape_string($con, $todo->modifiedDate);
+            $scheduleDate = mysqli_real_escape_string($con, $todo->scheduleDate);
+            $isFinished = mysqli_real_escape_string($con, $todo->isFinished);
+            $boardType = mysqli_real_escape_string($con, $todo->boardType);
 
-        $todo = [
-            'id' => mysqli_insert_id($con),
-            'name' => $name,
-            'createdDate' => $createdDate,
-            'modifiedDate' => $modifiedDate,
-            'scheduleDate' => $scheduleDate,
-            'isFinished' => $isFinished,
-            'boardType' => $boardType,
-        ];
+            $sql = "INSERT INTO `todoist`(`id`, `name`, `createdDate`, `modifiedDate`, `scheduleDate`, `isFinished`, `boardType`) VALUES (null, '{$name}', '{$createdDate}', '{$modifiedDate}', '{$scheduleDate}', '{$isFinished}', '{$boardType}')";
 
-        echo json_encode($todo);
-    } else {
-        return http_response_code(422);
+            if (mysqli_query($con, $sql)) {
+                http_response_code(201);
+
+                $todo = [
+                    'id' => mysqli_insert_id($con),
+                    'name' => $name,
+                    'createdDate' => $createdDate,
+                    'modifiedDate' => $modifiedDate,
+                    'scheduleDate' => $scheduleDate,
+                    'isFinished' => $isFinished,
+                    'boardType' => $boardType,
+                ];
+
+                echo json_encode($todo);
+            } else {
+                return http_response_code(422);
+            }
+        }
     }
 }

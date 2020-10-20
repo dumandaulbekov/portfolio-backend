@@ -2,18 +2,26 @@
 
 require '../connect.php';
 
-$id = ($_GET['id'] !== null && (int)$_GET['id'] > 0)
-    ? mysqli_real_escape_string($con, (int)$_GET['id'])
-    : false;
+$delete = new DeleteTodo();
+$delete->delete();
+class DeleteTodo {
+    public function delete() {
+        $con = connect();
 
-if ($id) {
-    $sql = "DELETE FROM `todoist` WHERE `id`='{$id}' LIMIT 1";
+        $id = ($_GET['id'] !== null && (int)$_GET['id'] > 0)
+            ? mysqli_real_escape_string($con, (int)$_GET['id'])
+            : false;
 
-    if (mysqli_query($con, $sql)) {
-        return http_response_code(204);
-    } else {
-        return http_response_code(422);
+        if ($id) {
+            $sql = "DELETE FROM `todoist` WHERE `id`='{$id}' LIMIT 1";
+
+            if (mysqli_query($con, $sql)) {
+                return http_response_code(204);
+            } else {
+                return http_response_code(422);
+            }
+        } else {
+            return http_response_code(400);
+        }
     }
-} else {
-    return http_response_code(400);
 }

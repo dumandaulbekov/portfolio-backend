@@ -1,26 +1,34 @@
 <?php
+require "../connect.php";
 
-require '../connect.php';
+$update = new UpdatePost();
+$update->update();
 
-$request = file_get_contents("php://input");
+class UpdatePost {
+    public function update() {
+        $con = connect();
 
-if (isset($request) && !empty($request)) {
-    $post = json_decode($request);
+        $body = file_get_contents("php://input");
 
-    if ((int)$post->id < 1 || trim($post->title) == '' || trim($post->content) == '') {
-        return http_response_code(400);
-    }
+        if (isset($body) && !empty($body)) {
+            $post = json_decode($body);
 
-    $id = mysqli_escape_string($con, (int)$post->id);
-    $title = mysqli_escape_string($con, trim($post->title));
-    $content = mysqli_escape_string($con, trim($post->content));
-    $modifiedDate = mysqli_real_escape_string($con, $post->modifiedDate);
+            if ((int)$post->id < 1 || trim($post->title) == '' || trim($post->content) == '') {
+                return http_response_code(400);
+            }
 
-    $sql = "UPDATE `posts` SET `title`='$title', `content`='$content', `modifiedDate`='$modifiedDate' WHERE `id`='{$id}' LIMIT 1";
+            $id = mysqli_escape_string($con, (int)$post->id);
+            $title = mysqli_escape_string($con, trim($post->title));
+            $content = mysqli_escape_string($con, trim($post->content));
+            $modifiedDate = mysqli_real_escape_string($con, $post->modifiedDate);
 
-    if (mysqli_query($con, $sql)) {
-        http_response_code(204);
-    } else {
-        return http_response_code(422);
+            $sql = "UPDATE `posts` SET `title`='$title', `content`='$content', `modifiedDate`='$modifiedDate' WHERE `id`='{$id}' LIMIT 1";
+
+            if (mysqli_query($con, $sql)) {
+                http_response_code(204);
+            } else {
+                return http_response_code(422);
+            }
+        }
     }
 }
