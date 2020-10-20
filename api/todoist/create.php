@@ -28,8 +28,6 @@ class CreateTodo {
             $sql = "INSERT INTO `todoist`(`id`, `name`, `createdDate`, `modifiedDate`, `scheduleDate`, `isFinished`, `boardType`) VALUES (null, '{$name}', '{$createdDate}', '{$modifiedDate}', '{$scheduleDate}', '{$isFinished}', '{$boardType}')";
 
             if (mysqli_query($con, $sql)) {
-                http_response_code(201);
-
                 $todo = [
                     'id' => mysqli_insert_id($con),
                     'name' => $name,

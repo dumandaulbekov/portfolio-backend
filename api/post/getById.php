@@ -19,11 +19,10 @@ class GetByIdPost {
             if ($result = mysqli_query($con, $sql)) {
                 echo json_encode(mysqli_fetch_assoc($result));
             } else {
-                http_response_code(404);
+                return http_response_code(404);
             }
         } else {
             return http_response_code(400);
         }
     }
 }
-

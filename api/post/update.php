@@ -25,7 +25,14 @@ class UpdatePost {
             $sql = "UPDATE `posts` SET `title`='$title', `content`='$content', `modifiedDate`='$modifiedDate' WHERE `id`='{$id}' LIMIT 1";
 
             if (mysqli_query($con, $sql)) {
-                http_response_code(204);
+                $post = [
+                    'id' => $id,
+                    'title' => $title,
+                    'content' => $content,
+                    'modifiedDate' => $modifiedDate,
+                ];
+
+                echo json_encode($post);
             } else {
                 return http_response_code(422);
             }

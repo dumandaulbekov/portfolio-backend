@@ -25,7 +25,6 @@ class GetAllPost {
             }
 
             echo json_encode($posts);
-            return json_encode($posts);
         } else {
             return http_response_code(404);
         }

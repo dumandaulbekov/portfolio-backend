@@ -25,8 +25,6 @@ class CreatePost {
             $sql = "INSERT INTO `posts`(`id`, `title`, `content`, `createdDate`, `modifiedDate`) VALUES (null, '{$title}', '{$content}', '{$createdDate}' ,'{$modifiedDate}')";
 
             if (mysqli_query($con, $sql)) {
-                http_response_code(201);
-
                 $post = [
                     'id' => mysqli_insert_id($con),
                     'title' => $title,
