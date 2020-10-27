@@ -4,25 +4,23 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT, GET, POST, DELETE");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'portfolio');
-
-// PROD 
-// define('DB_HOST', 'srv-pleskdb26.ps.kz:3306');
-// define('DB_NAME', 'sunwerkz_wp_1lpxs');
-// define('DB_USER', 'sunwerkz_sunwe_wp_91iev');
-// define('DB_PASS', 'PerfecT123!@#');
-
 function connect() {
-    $connect = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $db_host = 'localhost';
+    $db_name = 'portfolio';
+    $db_user = 'root';
+    $db_pass = '';
 
-    if (mysqli_connect_errno($connect)) {
-        die("Failed to connect" . mysqli_connect_error());
-    }
+    // $db_host = 'srv-pleskdb26.ps.kz:3306';
+    // $db_name = 'sunwerkz_wp_1lpxs';
+    // $db_user = 'sunwerkz_sunwe_wp_91iev';
+    // $db_pass = 'PerfecT123!@#';
 
-    mysqli_set_charset($connect, "utf8");
+    $dsn = "mysql:host=$db_host; dbname=$db_name";
+    $opt = [
+        PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE    => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES      => false,
+    ];
 
-    return $connect;
+    return new PDO($dsn, $db_user, $db_pass, $opt);
 }
