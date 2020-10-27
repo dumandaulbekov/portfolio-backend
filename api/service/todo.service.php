@@ -45,16 +45,22 @@ class TodoService {
     public function create($name, $boardType, $scheduleDate) {
         $createdDate = date('Y-m-d');
         $modifiedDate = date('Y-m-d');
-        $isFinished = false;
 
-        $sql = "INSERT INTO `todoist`(`id`, `name`, `createdDate`, `modifiedDate`, `scheduleDate`, `isFinished`, `boardType`) VALUES (null, '{$name}', '{$createdDate}', '{$modifiedDate}', '{$scheduleDate}', '{$isFinished}', '{$boardType}') LIMIT 1";
-        $db_response = $this->con->query($sql);
+        $sql = "INSERT INTO `todoist`(`name`, `createdDate`, `modifiedDate`, `scheduleDate`, `boardType`) VALUES (:name, :createdDate, :modifiedDate, :scheduleDate, :boardType)";
+        $db_response = $this->con->prepare($sql)->execute([
+            'name' => $name,
+            'createdDate' => $createdDate,
+            'modifiedDate' => $modifiedDate,
+            'scheduleDate' => $scheduleDate,
+            'boardType' => $boardType
+        ]);
 
         if (!$db_response) {
             return http_response_code(422);
         }
 
-        return json_encode($db_response);
+        $getAdddedTodo = $this->getById($this->con->lastInsertId());
+        return json_encode($getAdddedTodo);
     }
 
     public function updateName($id, $name) {
