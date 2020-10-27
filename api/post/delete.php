@@ -1,27 +1,24 @@
 <?php
 
-require '../connect.php';
+require '../service/post.service.php';
 
-$delete = new DeletePost();
-$delete->delete();
+$post = new Post();
+$post->delete();
 
-class DeletePost {
+class Post {
+    private $postService;
+
+    public function __construct() {
+        $this->postService = new PostService();
+    }
+
     public function delete() {
-        $con = connect();
-        $id = ($_GET['id'] !== null && (int)$_GET['id'] > 0)
-            ? mysqli_real_escape_string($con, (int)$_GET['id'])
-            : false;
+        $postId = json_decode(file_get_contents("php://input"));
 
-        if ($id) {
-            $sql = "DELETE FROM `posts` WHERE `id` = '{$id}' LIMIT 1";
-
-            if (mysqli_query($con, $sql)) {
-                return http_response_code(204);
-            } else {
-                return http_response_code(422);
-            }
-        } else {
+        if ($postId && $postId < 0) {
             return http_response_code(400);
         }
+
+        echo $this->postService->delete($postId);
     }
 }
