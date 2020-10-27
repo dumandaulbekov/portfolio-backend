@@ -1,28 +1,24 @@
 <?php
 
-require "../connect.php";
+require '../service/post.service.php';
 
-$getById = new GetByIdPost();
-$getById->getById();
+$post = new Post();
+$post->getById();
 
-class GetByIdPost {
+class Post {
+    private $postService;
+
+    public function __construct() {
+        $this->postService = new PostService();
+    }
+
     public function getById() {
-        $con = connect();
+        $id = $_GET['id'];
 
-        $id = ($_GET['id'] !== null && (int)$_GET['id'] > 0)
-            ? mysqli_real_escape_string($con, (int)$_GET['id'])
-            : false;
-
-        if ($id) {
-            $sql = "SELECT * FROM `posts` WHERE id='{$id}'";
-
-            if ($result = mysqli_query($con, $sql)) {
-                echo json_encode(mysqli_fetch_assoc($result));
-            } else {
-                return http_response_code(404);
-            }
-        } else {
+        if (!$id && $id < 0) {
             return http_response_code(400);
         }
+
+        echo $this->postService->getById($id);
     }
 }
