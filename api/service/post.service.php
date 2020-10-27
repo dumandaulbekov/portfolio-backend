@@ -43,16 +43,20 @@ class PostService {
         $createdDate = date('Y-m-d');
         $modifiedDate = date('Y-m-d');
 
-        $sql = "INSERT INTO `posts` (`title`, `content`, `createdDate`, `modifiedDate`) VALUES (?, ?, ?, ?)";
-        // $db_response = $this->con->query($sql);
-
-        $db_response = $this->con->prepare($sql)->execute([$title, $content, $createdDate, $modifiedDate]);
+        $sql = "INSERT INTO `posts` (`title`, `content`, `createdDate`, `modifiedDate`) VALUES (:title, :content, :createdDate, :modifiedDate)";
+        $db_response = $this->con->prepare($sql)->execute([
+            'title' => $title,
+            'content' => $content,
+            'createdDate' => $createdDate,
+            'modifiedDate' => $modifiedDate
+        ]);
 
         if (!$db_response) {
             return http_response_code(422);
         }
 
-        return json_encode($db_response);
+        $getAdddedPost = $this->getById($this->con->lastInsertId());
+        return json_encode($getAdddedPost);
     }
 
     public function update($id, $title, $content) {
@@ -67,7 +71,6 @@ class PostService {
 
         return json_encode($db_response);
     }
-
 
     public function delete($id) {
         $modifiedDate = date('Y-m-d');

@@ -1,42 +1,24 @@
 <?php
-require '../connect.php';
 
-$create = new CreatePost();
-$create->create();
+require '../service/post.service.php';
 
-class CreatePost {
+$post = new Post();
+$post->create();
+
+class Post {
+    private $postService;
+
+    public function __construct() {
+        $this->postService = new PostService();
+    }
+
     public function create() {
-        $con = connect();
+        $post = json_decode(file_get_contents("php://input"));
 
-        $body = file_get_contents("php://input");
-
-        if (isset($body) && !empty($body)) {
-            $post = json_decode($body);
-
-            if (trim($post->title === '' || $post->content === '')) {
-                return http_response_code(400);
-            }
-
-            $title = mysqli_real_escape_string($con, trim($post->title));
-            $content = mysqli_real_escape_string($con, trim($post->content));
-            $createdDate = mysqli_real_escape_string($con, $post->createdDate);
-            $modifiedDate = mysqli_real_escape_string($con, $post->modifiedDate);
-
-            $sql = "INSERT INTO `posts`(`id`, `title`, `content`, `createdDate`, `modifiedDate`) VALUES (null, '{$title}', '{$content}', '{$createdDate}' ,'{$modifiedDate}')";
-
-            if (mysqli_query($con, $sql)) {
-                $post = [
-                    'id' => mysqli_insert_id($con),
-                    'title' => $title,
-                    'content' => $content,
-                    'createdDate' => $createdDate,
-                    'modifiedDate' => $modifiedDate,
-                ];
-
-                echo json_encode($post);
-            } else {
-                return http_response_code(422);
-            }
+        if (trim($post->title === '' && $post->content === '')) {
+            return http_response_code(400);
         }
+
+        echo $this->postService->create($post->title, $post->content);
     }
 }
