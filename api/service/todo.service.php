@@ -60,7 +60,7 @@ class TodoService {
         }
 
         $getAdddedTodo = $this->getById($this->con->lastInsertId());
-        return json_encode($getAdddedTodo);
+        return $getAdddedTodo;
     }
 
     public function updateName($id, $name) {

@@ -56,7 +56,7 @@ class PostService {
         }
 
         $getAdddedPost = $this->getById($this->con->lastInsertId());
-        return json_encode($getAdddedPost);
+        return $getAdddedPost;
     }
 
     public function update($id, $title, $content) {
